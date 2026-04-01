@@ -1,7 +1,5 @@
 venv/
-
-secrets.toml
-
+config.toml
 __pycache__/
 *.pyc
 *.pyo
