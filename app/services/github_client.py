@@ -31,3 +31,30 @@ def post(endpoint: str, body: dict) -> dict:
         response = client.post(url, headers=get_headers(), json=body)
 
     return handle_response(response)
+
+def handle_response(response: httpx.Response) -> dict | list:
+    if response.status_code == 401:
+        raise HTTPException(
+            status_code=401,
+            detail="GitHub authentication failed. Check your token in config.toml.",
+        )
+
+    if response.status_code == 404:
+        raise HTTPException(
+            status_code=404,
+            detail="Resource not found. Check the owner and repo name.",
+        )
+
+    if response.status_code == 422:
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid data sent to GitHub. Check your request body.",
+        )
+
+    if not response.is_success:
+        raise HTTPException(
+            status_code=502,
+            detail=f"GitHub API error: {response.status_code} — {response.text}",
+        )
+
+    return response.json()
