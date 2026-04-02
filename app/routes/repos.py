@@ -5,9 +5,19 @@ from app.services import github_client
 router =APIRouter()
 
 @router.get("/repos")
-def get_repo():
-    return github_client.get("user/repos")
+def get_repos():
+    return github_client.get("/user/repos")
+
 
 @router.get("/repos/{owner}/{repo}/commits")
-def get_commits(owner:str,repo:str):
-    return github_client.get(f"/repos/{owner}/{repo}/commits")
+def get_commits(owner: str, repo: str):
+    commits= github_client.get(f"/repos/{owner}/{repo}/commits")
+    return [
+        {
+            "sha": commit["sha"],
+            "message": commit["commit"]["message"],
+            "author": commit["commit"]["author"]["name"],
+            "date": commit["commit"]["author"]["date"],
+        }
+        for commit in commits
+    ]
