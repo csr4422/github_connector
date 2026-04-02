@@ -9,3 +9,7 @@ app = FastAPI(
 
 app.include_router(repos.router)
 app.include_router(issues.router)
+
+app.get("/health")
+def health_check():
+    return{"status":"ok", "message":"Github Connector is running"}
