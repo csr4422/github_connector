@@ -6,3 +6,6 @@ app = FastAPI(
     description="A Simple cloude connect to Github"
     version="1.0.0."
 )
+
+app.include_router(repos.router)
+app.include_router(issues.router)
