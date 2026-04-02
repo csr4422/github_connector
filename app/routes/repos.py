@@ -4,10 +4,21 @@ from app.services import github_client
 
 router =APIRouter()
 
+
 @router.get("/repos")
 def get_repos():
-    return github_client.get("/user/repos")
-
+    repos = github_client.get("/user/repos")
+    return [
+        {
+            "name": repo["name"],
+            "description": repo["description"],
+            "language": repo["language"],
+            "stars": repo["stargazers_count"],
+            "url": repo["html_url"],
+            "visibility": repo["visibility"],
+        }
+        for repo in repos
+    ]
 
 @router.get("/repos/{owner}/{repo}/commits")
 def get_commits(owner: str, repo: str):
