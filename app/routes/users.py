@@ -15,3 +15,18 @@ def get_user():
         "following": user["following"],
         "url": user["html_url"],
     }
+
+@router.get("/users/{username}/repos")
+def get_user_repos(username: str):
+    repos = github_client.get(f"/users/{username}/repos")
+    return [
+        {
+            "name": repo["name"],
+            "description": repo["description"],
+            "language": repo["language"],
+            "stars": repo["stargazers_count"],
+            "url": repo["html_url"],
+            "visibility": repo["visibility"],
+        }
+        for repo in repos
+    ]
